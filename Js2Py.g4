@@ -6,7 +6,7 @@ grammar Js2Py;
 
 program: (line | function)+ EOF;
 
-line: (statement ';'? | conditional_statment | ternary_statement) NEWLINE;
+line: (statement | conditional_statment | ternary_statement) ';'? NEWLINE;
 
 // Statement
 
@@ -56,6 +56,8 @@ array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 array_length: VARIABLE '.' 'length';
 
 array_item: VARIABLE '[' DIGIT+ ']';
+
+array_concat: value '.' 'concat' '(' value ( ',' value)* ')';
 
 // Console
 console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
