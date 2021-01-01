@@ -24,6 +24,7 @@ value: (
 		| TEXT
 		| function_call
 		| array
+		| array_item
 		| array_length
 	);
 
@@ -54,6 +55,8 @@ array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 
 array_length: VARIABLE '.' 'length';
 
+array_item: VARIABLE '[' DIGIT+ ']';
+
 // Console
 console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
 
@@ -69,8 +72,8 @@ while_loop:
  */
 fragment LOWERCASE: [a-z];
 fragment UPPERCASE: [A-Z];
-fragment DIGIT: [0-9];
 
+DIGIT: [0-9];
 FUNCTION: 'function';
 RETURN: 'return';
 WHILE: 'while';
