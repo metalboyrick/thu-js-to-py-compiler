@@ -102,7 +102,7 @@ VARIABLE: (LOWERCASE | UPPERCASE) (
 		| UPPERCASE
 		| DIGIT
 		| '_'
-	)+;
+	)*;
 
 NUMBER: DIGIT+ .? DIGIT*;
 
