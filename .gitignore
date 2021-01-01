@@ -1,6 +1,7 @@
 *.interp
 *.tokens
 *.java
+*.class
 Js2PyParser.py
 Js2PyListener.py
 Js2PyLexer.py
