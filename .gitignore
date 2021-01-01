@@ -1,4 +1,4 @@
-lex.yy.c 
-c2py.tab.c 
-c2py.tab.h 
-c2py
+*.interp
+*.tokens
+Js2PyParser.py
+Js2PyListener.py
