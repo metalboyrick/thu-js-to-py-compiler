@@ -2,3 +2,4 @@
 *.tokens
 Js2PyParser.py
 Js2PyListener.py
+Js2PyLexer.py
