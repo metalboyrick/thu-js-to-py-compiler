@@ -4,7 +4,7 @@ grammar Js2Py;
  * Parser Rules
  */
 
- // Note : scopes must be NEWLINED
+// Note : scopes must be NEWLINED
 
 program: (line | function)+ EOF;
 
@@ -12,11 +12,17 @@ line: (statement | conditional_statement | ternary_statement) ';'? NEWLINE+;
 
 // Statement
 
-statement: (assignment | array_ops | function_call | arithmetic | console_log);
+statement: (
+		assignment
+		| array_ops
+		| function_call
+		| arithmetic
+		| console_log
+	);
 
-// TODO: fix error here
-// issues lie within the value production , the parser parses 1) as a value
-conditional_statement: IF '(' expression (relop expression)* ')' '{' NEWLINE* line+ '}';
+// TODO: fix error here issues lie within the value production , the parser parses 1) as a value
+conditional_statement:
+	IF '(' expression (relop expression)* ')' '{' NEWLINE* line+ '}';
 
 ternary_statement: expression '?' statement ':' statement;
 
@@ -34,7 +40,9 @@ value: (
 assignment: VAR VARIABLE '=' value;
 
 // Function 
-function: (FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ RETURN value NEWLINE* '}');
+function: (
+		FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ RETURN value NEWLINE* '}'
+	);
 
 function_call: VARIABLE '(' value* ')';
 
@@ -58,7 +66,7 @@ array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 
 array_length: VARIABLE '.' 'length';
 
-array_item: VARIABLE '[' NUMBER ']';
+array_item: VARIABLE '[' INTEGER ']';
 
 array_concat: value '.' 'concat' '(' value ( ',' value)* ')';
 
@@ -77,8 +85,8 @@ while_loop:
  */
 fragment LOWERCASE: [a-z];
 fragment UPPERCASE: [A-Z];
-
 fragment DIGIT: [0-9];
+
 FUNCTION: 'function';
 RETURN: 'return';
 WHILE: 'while';
@@ -107,7 +115,9 @@ VARIABLE: (LOWERCASE | UPPERCASE) (
 		| '_'
 	)*;
 
-NUMBER: DIGIT+ .? DIGIT*;
+NUMBER: DIGIT+ ([.,] DIGIT+)?;
+
+INTEGER: DIGIT+;
 
 WHITESPACE: (' ' | '\t')+ -> skip;
 
