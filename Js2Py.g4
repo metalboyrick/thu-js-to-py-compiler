@@ -8,7 +8,7 @@ grammar Js2Py;
 
 program: (line | function)+ EOF;
 
-line: (statement | conditional_statement | ternary_statement) ';'? NEWLINE+;
+line: (ternary_statement | statement | conditional_statement ) ';'? NEWLINE+;
 
 // Statement
 
@@ -35,9 +35,9 @@ value: (
 		| NUMBER
 		| TEXT
 		| function_call
-		| array
 		| array_item
 		| array_length
+		| array	
 	);
 
 assignment: VAR VARIABLE '=' value;
@@ -65,13 +65,14 @@ relop: (LT | LTE | GT | GTE | EQ | NEQ);
 expression: value relop value;
 
 // Array
-array: '[' value? ( ',' value)* ']';
 
-array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
+array_item: VARIABLE '[' value ']';
 
 array_length: VARIABLE '.' 'length';
 
-array_item: VARIABLE '[' INTEGER ']';
+array: '[' value? ( ',' value)* ']';
+
+array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 
 array_concat: value '.' 'concat' '(' value ( ',' value)* ')';
 
@@ -81,9 +82,9 @@ console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
 // Loop
 while_loop:
 	WHILE '(' expression (relop expression)* ')' '{' NEWLINE* (
-		line
+		line+
 		| (BREAK NEWLINE)
-	)+ '}';
+	) '}';
 
 /*
  * Lexer Rules
