@@ -4,6 +4,8 @@ grammar Js2Py;
  * Parser Rules
  */
 
+ // Note : scopes must be NEWLINED
+
 program: (line | function)+ EOF;
 
 line: (statement | conditional_statment | ternary_statement) ';'? NEWLINE;
@@ -31,7 +33,10 @@ value: (
 assignment: VAR VARIABLE '=' value;
 
 // Function 
-function: FUNCTION '(' value* ')' '{' line+ RETURN value '}';
+function: (
+			FUNCTION VARIABLE '(' value* ')' '{' NEWLINE line+ RETURN value NEWLINE '}'			// regular function definition
+			| FUNCTION '(' value* ')' '{' NEWLINE line+ RETURN value NEWLINE '}'				// function assignment to object
+	);
 
 function_call: VARIABLE '(' value* ')';
 
