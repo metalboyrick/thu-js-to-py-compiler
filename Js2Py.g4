@@ -6,7 +6,7 @@ grammar Js2Py;
 
 // Note : scopes must be NEWLINED
 
-program: (line | function)+ EOF;
+program: (line | function)+  EOF;
 
 line: (ternary_statement | statement | conditional_statement ) ';'? NEWLINE+;
 
@@ -15,6 +15,7 @@ line: (ternary_statement | statement | conditional_statement ) ';'? NEWLINE+;
 statement: (
 		assignment
 		| array_ops
+		| array_concat
 		| function_return
 		| function_call
 		| arithmetic
@@ -43,12 +44,12 @@ assignment: VAR VARIABLE '=' value;
 
 // Function 
 function: (
-		FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ '}'
+		FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ '}' ';'? NEWLINE+
 	);
 
 function_call: VARIABLE '(' value* ')';
 
-function_return: RETURN value;
+function_return: RETURN (value | array_concat);
 
 // Arithmetic
 op: (ADD_OP | SUB_OP | MUL_OP | DIV_OP);
