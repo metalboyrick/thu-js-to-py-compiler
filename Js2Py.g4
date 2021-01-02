@@ -8,14 +8,15 @@ grammar Js2Py;
 
 program: (line | function)+ EOF;
 
-line: (statement | conditional_statment | ternary_statement) ';'? NEWLINE;
+line: (statement | conditional_statement | ternary_statement) ';'? NEWLINE+;
 
 // Statement
 
 statement: (assignment | array_ops | function_call | arithmetic | console_log);
 
-conditional_statment:
-	IF '(' expression (relop expression)* ')' '{' line '}';
+// TODO: fix error here
+// issues lie within the value production , the parser parses 1) as a value
+conditional_statement: IF '(' expression (relop expression)* ')' '{' NEWLINE* line+ '}';
 
 ternary_statement: expression '?' statement ':' statement;
 
@@ -33,10 +34,7 @@ value: (
 assignment: VAR VARIABLE '=' value;
 
 // Function 
-function: (
-			FUNCTION VARIABLE '(' value* ')' '{' NEWLINE line+ RETURN value NEWLINE '}'			// regular function definition
-			| FUNCTION '(' value* ')' '{' NEWLINE line+ RETURN value NEWLINE '}'				// function assignment to object
-	);
+function: (FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ RETURN value NEWLINE* '}');
 
 function_call: VARIABLE '(' value* ')';
 
@@ -60,7 +58,7 @@ array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 
 array_length: VARIABLE '.' 'length';
 
-array_item: VARIABLE '[' DIGIT+ ']';
+array_item: VARIABLE '[' NUMBER ']';
 
 array_concat: value '.' 'concat' '(' value ( ',' value)* ')';
 
@@ -80,7 +78,7 @@ while_loop:
 fragment LOWERCASE: [a-z];
 fragment UPPERCASE: [A-Z];
 
-DIGIT: [0-9];
+fragment DIGIT: [0-9];
 FUNCTION: 'function';
 RETURN: 'return';
 WHILE: 'while';
