@@ -40,7 +40,7 @@ value: (
 		| array	
 	);
 
-assignment: VAR VARIABLE '=' value;
+assignment: ( VAR | CONST | LET ) VARIABLE '=' value;
 
 // Function 
 function: (
@@ -62,11 +62,11 @@ arithmetic: (
 // Relational
 relop: (LT | LTE | GT | GTE | EQ | NEQ);
 
-expression: value relop value;
+expression: (value | arithmetic) relop (value | arithmetic);
 
 // Array
 
-array_item: VARIABLE '[' value ']';
+array_item: VARIABLE '[' (value | arithmetic) ']';
 
 array_length: VARIABLE '.' 'length';
 
@@ -97,6 +97,8 @@ FUNCTION: 'function';
 RETURN: 'return';
 WHILE: 'while';
 VAR: 'var';
+CONST: 'const';
+LET: 'let';
 IF: 'if';
 ELSE: 'else';
 LT: '<';
