@@ -10,7 +10,7 @@ line: (statement | conditional_statment | ternary_statement) ';'? NEWLINE;
 
 // Statement
 
-statement: assignment | array_ops | function_call | arithmetic;
+statement: (assignment | array_ops | function_call | arithmetic | console_log);
 
 conditional_statment:
 	IF '(' expression (relop expression)* ')' '{' line '}';
