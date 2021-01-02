@@ -8,8 +8,10 @@ function quicksort(array) {
     var left = [];
     var right = [];
 
-    for (var i = 1; i < array.length; i++) {
+    var i = 1;
+    while (i < array.length) {
         array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
+        i++;
     }
 
     return quicksort(left).concat(pivot, quicksort(right));

@@ -18,6 +18,8 @@ statement: (
 		| function_call
 		| arithmetic
 		| console_log
+		| function_return
+		| while_loop
 	);
 
 // TODO: fix error here issues lie within the value production , the parser parses 1) as a value
@@ -29,6 +31,7 @@ ternary_statement: expression '?' statement ':' statement;
 // Assignment
 value: (
 		VARIABLE
+		| INTEGER
 		| NUMBER
 		| TEXT
 		| function_call
@@ -41,10 +44,12 @@ assignment: VAR VARIABLE '=' value;
 
 // Function 
 function: (
-		FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ RETURN value NEWLINE* '}'
+		FUNCTION VARIABLE? '(' value* ')' '{' NEWLINE* line+ '}'
 	);
 
 function_call: VARIABLE '(' value* ')';
+
+function_return: RETURN value;
 
 // Arithmetic
 op: (ADD_OP | SUB_OP | MUL_OP | DIV_OP);
@@ -60,7 +65,7 @@ relop: (LT | LTE | GT | GTE | EQ | NEQ);
 expression: value relop value;
 
 // Array
-array: '[' value ( ',' value)* ']';
+array: '[' value? ( ',' value)* ']';
 
 array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
 
@@ -75,9 +80,9 @@ console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
 
 // Loop
 while_loop:
-	WHILE '(' expression (relop expression)* ')' '{' (
+	WHILE '(' expression (relop expression)* ')' '{' NEWLINE* (
 		line
-		| BREAK NEWLINE
+		| (BREAK NEWLINE)
 	)+ '}';
 
 /*
@@ -115,9 +120,9 @@ VARIABLE: (LOWERCASE | UPPERCASE) (
 		| '_'
 	)*;
 
-NUMBER: DIGIT+ ([.,] DIGIT+)?;
-
 INTEGER: DIGIT+;
+
+NUMBER: DIGIT+ ([.,] DIGIT+)?;
 
 WHITESPACE: (' ' | '\t')+ -> skip;
 
