@@ -15,10 +15,10 @@ line: (ternary_statement | statement | conditional_statement ) ';'? NEWLINE+;
 statement: (
 		assignment
 		| array_ops
+		| function_return
 		| function_call
 		| arithmetic
 		| console_log
-		| function_return
 		| while_loop
 	);
 
@@ -31,7 +31,6 @@ ternary_statement: expression '?' statement ':' statement;
 // Assignment
 value: (
 		VARIABLE
-		| INTEGER
 		| NUMBER
 		| TEXT
 		| function_call
@@ -120,8 +119,6 @@ VARIABLE: (LOWERCASE | UPPERCASE) (
 		| DIGIT
 		| '_'
 	)*;
-
-INTEGER: DIGIT+;
 
 NUMBER: DIGIT+ ([.,] DIGIT+)?;
 
