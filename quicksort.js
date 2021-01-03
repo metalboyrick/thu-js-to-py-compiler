@@ -1,4 +1,4 @@
-function quicksort(abc) {
+function quicksort(array) {
     if (array.length <= 1) {
         return array;
     }
@@ -14,10 +14,10 @@ function quicksort(abc) {
         i++;
     }
 
-    return quicksort(left).concat(pivot, quicksort(right));
+    return quicksort(left).concat([pivot], quicksort(right));
 };
 
 var unsorted = [23, 45, 16, 37, 3, 99, 22];
-var sorted = quicksort(unsorted);
+var result = quicksort(unsorted);
 
-console.log('Sorted array', sorted);
+console.log('Sorted array', result);

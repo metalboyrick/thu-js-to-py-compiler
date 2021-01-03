@@ -19,3 +19,5 @@ const string = "racecar";
 const value = checkPalindrome(string);
 
 console.log(value);
+
+console.log(checkPalindrome("abcdef"));

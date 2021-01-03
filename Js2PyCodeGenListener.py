@@ -12,7 +12,6 @@ class Js2PyCodeGenListener(Js2PyListener) :
 
     # Exit a parse tree produced by Js2PyParser#line.
     def exitLine(self, ctx:Js2PyParser.LineContext):
-        print("%s %d" % (ctx.getText(),len(ctx.getText())))
         self.output.write("\n")
 
     # Enter a parse tree produced by Js2PyParser#unary_arithmetic.
@@ -23,12 +22,28 @@ class Js2PyCodeGenListener(Js2PyListener) :
             self.output.write("%s -= 1" % (ctx.VARIABLE()))
 
     # Enter a parse tree produced by Js2PyParser#condition.
-    def enterCondition(self, ctx:Js2PyParser.ConditionContext):
-        self.output.write("%s " % (ctx.getText()))
+    def exitExpression(self, ctx:Js2PyParser.ExpressionContext):
+        text = ""
+        for index in range(0,len(ctx.children)):
+            if hasattr(ctx.children[index],'text'):
+                text += ctx.children[index].text
+            else:
+                text += ctx.children[index].getText()
+        if not isinstance(ctx.parentCtx,Js2PyParser.Ternary_statementContext):
+            self.output.write(text)
 
-    # Exit a parse tree produced by Js2PyParser#condition.
+    # Enter a parse tree produced by Js2PyParser#value.
+    def enterValue(self, ctx:Js2PyParser.ValueContext):
+        if ctx.array_length() != None:
+            ctx.text = f"len({ctx.array_length().VARIABLE()})"
+
+    # Enter a parse tree produced by Js2PyParser#condition.
     def exitCondition(self, ctx:Js2PyParser.ConditionContext):
         self.output.write(":\n")
+
+    def exitValue(self, ctx:Js2PyParser.ValueContext):
+        if ctx.array_length():
+            ctx.text = f"len({ctx.array_length().VARIABLE()})"
 
     # Enter a parse tree produced by Js2PyParser#conditional_statement.
     def enterConditional_statement(self, ctx:Js2PyParser.Conditional_statementContext):
@@ -43,7 +58,10 @@ class Js2PyCodeGenListener(Js2PyListener) :
 
     # Enter a parse tree produced by Js2PyParser#ternary_statement.
     def enterTernary_statement(self, ctx:Js2PyParser.Ternary_statementContext):
-        self.output.write("%s if %s else %s" % (ctx.statement()[0].getText(),ctx.expression().getText(),ctx.statement()[1].getText()))
+        self.output.write("%s if %s else %s" % (
+            ctx.statement()[0].getText().replace("push","append"),
+            ctx.expression().getText(),
+            ctx.statement()[1].getText().replace("push","append")))
 
     # Exit a parse tree produced by Js2PyParser#ternary_statement.
     def exitTernary_statement(self, ctx:Js2PyParser.Ternary_statementContext):
@@ -52,9 +70,18 @@ class Js2PyCodeGenListener(Js2PyListener) :
     # Enter a parse tree produced by Js2PyParser#assignment.
     def enterAssignment(self, ctx:Js2PyParser.AssignmentContext):
         if ctx.value().array_length() != None:
-            self.output.write("%s = " % (ctx.VARIABLE()))
+            self.output.write("%s = %s" % (ctx.VARIABLE(),f"len({ctx.value().array_length().VARIABLE()})"))
         else:
             self.output.write("%s = %s" % (ctx.VARIABLE(),ctx.value().getText()))
+
+    # Enter a parse tree produced by Js2PyParser#array_concat.
+    def enterArray_concat(self, ctx:Js2PyParser.Array_concatContext):
+        concatStr = ""
+        for i in range(2,-1,-1):
+            concatStr = ctx.value()[i].getText() + concatStr
+            if i != 0:
+                concatStr = '+' + concatStr
+        self.output.write("%s" % (concatStr))
 
     # Enter a parse tree produced by Js2PyParser#function.
     def enterFunction(self, ctx:Js2PyParser.FunctionContext):
@@ -85,11 +112,7 @@ class Js2PyCodeGenListener(Js2PyListener) :
         if(ctx.value()):
             self.output.write("%s\n" % (ctx.value().getText()))
         else:
-            self.output.write("%s\n " % (ctx.array_concat().getText()))
-
-    # Enter a parse tree produced by Js2PyParser#array_length.
-    def enterArray_length(self, ctx:Js2PyParser.Array_lengthContext):
-        self.output.write("len(%s)" % (ctx.VARIABLE()))
+            pass
 
     # Enter a parse tree produced by Js2PyParser#console_log.
     def enterConsole_log(self, ctx:Js2PyParser.Console_logContext):
