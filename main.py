@@ -2,20 +2,26 @@ import sys
 from antlr4 import *
 from Js2PyLexer import Js2PyLexer
 from Js2PyParser import Js2PyParser
-from Js2PyChatListener import Js2PyChatListener
+from Js2PyListener import Js2PyListener
+
+"""
+add the following in Js2PyListener class
+def __init__(self,output):
+    self.output = output
+    super()
+"""
 
 def main(argv):
     input = FileStream(argv[1])
-    lexer = ChatLexer(input)
+    lexer = Js2PyLexer(input)
     stream = CommonTokenStream(lexer)
-    parser = ChatParser(stream)
-    tree = parser.chat()
+    parser = Js2PyParser(stream)
+    tree = parser.program()
 
-    output = open("output.py","w")
-    
-    htmlChat = HtmlChatListener(output)
-    walker = ParseTreeWalker()
-    walker.walk(htmlChat, tree)
+    with open("output.py","w") as output:
+        js2pyListen = Js2PyListener(output)
+        walker = ParseTreeWalker()
+        walker.walk(js2pyListen, tree)
         
     output.close()      
 
