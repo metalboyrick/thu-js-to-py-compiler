@@ -54,10 +54,9 @@ function_return: RETURN (value | array_concat);
 // Arithmetic
 op: (ADD_OP | SUB_OP | MUL_OP | DIV_OP);
 
-arithmetic: (
-		(value op value (op value)*)
-		| VARIABLE (UNNARY_ADD | UNNARY_MINUS)
-	);
+unary_arithmetic: VARIABLE (UNNARY_ADD | UNNARY_MINUS);
+
+arithmetic: ( (value op value (op value)*) | unary_arithmetic);
 
 // Relational
 relop: (LT | LTE | GT | GTE | EQ | NEQ);
