@@ -2,14 +2,8 @@ import sys
 from antlr4 import *
 from Js2PyLexer import Js2PyLexer
 from Js2PyParser import Js2PyParser
-from Js2PyListener import Js2PyListener
+from Js2PyCodeGenListener import Js2PyCodeGenListener
 
-"""
-add the following in Js2PyListener class
-def __init__(self,output):
-    self.output = output
-    super()
-"""
 
 def main(argv):
     input = FileStream(argv[1])
@@ -19,7 +13,7 @@ def main(argv):
     tree = parser.program()
 
     with open("output.py","w") as output:
-        js2pyListen = Js2PyListener(output)
+        js2pyListen = Js2PyCodeGenListener(output)
         walker = ParseTreeWalker()
         walker.walk(js2pyListen, tree)
         
