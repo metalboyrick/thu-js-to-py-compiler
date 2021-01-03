@@ -55,7 +55,7 @@ function_return: RETURN (value | array_concat);
 // Arithmetic
 op: (ADD_OP | SUB_OP | MUL_OP | DIV_OP);
 
-unary_arithmetic: VARIABLE (UNNARY_ADD | UNNARY_MINUS);
+unary_arithmetic: VARIABLE (UNARY_ADD | UNARY_MINUS);
 
 arithmetic: ( (value op value (op value)*) | unary_arithmetic);
 
@@ -117,8 +117,8 @@ ADD_OP: '+';
 SUB_OP: '-';
 MUL_OP: '*';
 DIV_OP: '/';
-UNNARY_ADD: '++';
-UNNARY_MINUS: '--';
+UNARY_ADD: '++';
+UNARY_MINUS: '--';
 
 VARIABLE: (LOWERCASE | UPPERCASE) (
 		LOWERCASE

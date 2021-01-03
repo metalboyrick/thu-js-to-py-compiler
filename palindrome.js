@@ -1,11 +1,11 @@
-function checkPalindrome(str) {
+function checkPalindrome(input) {
 
-    const len = string.length;
+    const str_len = input.length;
     
     let i = 0;
 
-    while(i < len / 2){
-        if (string[i] != string[len - 1 - i]) {
+    while(i < str_len / 2){
+        if (input[i] != input[str_len - 1 - i]) {
             return 'It is not a palindrome';
         }
         i++;
@@ -14,7 +14,7 @@ function checkPalindrome(str) {
     return 'It is a palindrome';
 }
 
-const string = "abcabc";
+const string = "racecar";
 
 const value = checkPalindrome(string);
 
