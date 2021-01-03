@@ -6,9 +6,9 @@ grammar Js2Py;
 
 // Note : scopes must be NEWLINED
 
-program: (line | function)+  EOF;
+program: (line | function)+ EOF;
 
-line: (ternary_statement | statement | conditional_statement ) ';'? NEWLINE+;
+line: (ternary_statement | statement | conditional_statement) ';'? NEWLINE+;
 
 // Statement
 
@@ -37,10 +37,10 @@ value: (
 		| function_call
 		| array_item
 		| array_length
-		| array	
+		| array
 	);
 
-assignment: ( VAR | CONST | LET ) VARIABLE '=' value;
+assignment: ( VAR | CONST | LET) VARIABLE '=' value;
 
 // Function 
 function: (
@@ -72,9 +72,13 @@ array_length: VARIABLE '.' 'length';
 
 array: '[' value? ( ',' value)* ']';
 
-array_ops: VARIABLE '.' ('push' | 'pop') '(' value+ ')';
+array_ops:
+	VARIABLE '.' ('push' | 'pop') '(' (value | array_item)+ ')';
 
-array_concat: value '.' 'concat' '(' value ( ',' value)* ')';
+array_concat:
+	value '.' 'concat' '(' (value | array_item) (
+		',' (value | array_item)
+	)* ')';
 
 // Console
 console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
