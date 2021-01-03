@@ -23,9 +23,10 @@ statement: (
 		| while_loop
 	);
 
-// TODO: fix error here issues lie within the value production , the parser parses 1) as a value
+condition: expression (relop expression)*;
+
 conditional_statement:
-	IF '(' expression (relop expression)* ')' '{' NEWLINE* line+ '}';
+	IF '(' condition ')' '{' NEWLINE* line+ '}';
 
 ternary_statement: expression '?' statement ':' statement;
 
@@ -84,7 +85,7 @@ console_log: CONSOLE '.log' '(' value ( ',' value)* ')';
 
 // Loop
 while_loop:
-	WHILE '(' expression (relop expression)* ')' '{' NEWLINE* (
+	WHILE '(' condition ')' '{' NEWLINE* (
 		line+
 		| (BREAK NEWLINE)
 	) '}';
