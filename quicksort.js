@@ -9,7 +9,7 @@ function quicksort(array) {
     var right = [];
 
     var i = 1;
-    while (i < array.length) { 
+    while (i < array.length) {
         array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
         i++;
     }
@@ -20,4 +20,5 @@ function quicksort(array) {
 var unsorted = [23, 45, 16, 37, 3, 99, 22];
 var result = quicksort(unsorted);
 
+console.log('Unsorted array', unsorted)
 console.log('Sorted array', result);
